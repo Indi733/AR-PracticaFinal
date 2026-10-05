@@ -10,7 +10,7 @@ El enunciado oficial está incluido en el repositorio: [`AR_PR07_practica-final.
 |---|---|
 | `AR_PR07_practica-final.pdf` | Guion (enunciado) de la práctica final |
 | `practica_final.pkt` | Escenario de simulación de Cisco Packet Tracer |
-| `Untitled document (2).pdf` | Borrador del plan de direccionamiento de la Organización A |
+| `subneting.pdf` | Borrador del plan de direccionamiento de la Organización A |
 
 ## Descripción del trabajo
 
