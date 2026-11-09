@@ -1,0 +1,377 @@
+--- PAGE 1 ---
+ 
+ 
+Arquitectura de Redes Grado en Ingeniería Informática 
+Práctica Final 
+ 1 
+ 
+ 
+ 
+ 
+ 
+ 
+ARQUITECTURA DE REDES 
+ 
+Práctica final 
+Curso 2026/2027 
+ 
+ 
+ 
+ 
+Contenido 
+ 
+1. Consideraciones generales ........................................................... 2 
+2. Introducción ................................................................................... 2 
+3. Direccionamiento ........................................................................... 3 
+3.1 Organización A ............................................................................... 3 
+3.2 Organización B ............................................................................... 4 
+4. Encaminamiento intra-dominio IPv4 .............................................. 5 
+4.1 Organización A ............................................................................... 5 
+4.2 Organización B ............................................................................... 6 
+5. Interconexión y redistribución de rutas .......................................... 7 
+6. Entrega .......................................................................................... 8 
+7. Evaluación ..................................................................................... 9 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+--- PAGE 2 ---
+ 
+ 
+Arquitectura de Redes Grado en Ingeniería Informática 
+Práctica Final 
+ 2 
+ 
+1. Consideraciones generales 
+ 
+Para la realización de esta práctica, cada estudiante debe ponerse en el 
+papel del personal de ingeniería y administración de red que trabajan en las 
+distintas redes que forman parte de  cada uno de los escenarios. En cada red 
+se han de tomar una serie de decisiones que afectarán a la configuración de 
+estos. 
+Cada estudiante deberá utilizar el simulador de redes Cisco Packet Tracer 
+para implementar los escenarios de red propuestos. Estos escenarios cubrirán 
+los distintos aspectos sobre direccionamiento y enrutamiento abordados en las 
+sesiones de prácticas. 
+Inicialmente deberá diseñar el direccionamiento de dos organizaciones 
+diferentes según las indicaciones de la Sección 3. A continuación, cada 
+estudiante configurará cada una de las redes  para que utilice el protocolo de 
+encaminamiento intra-dominio según los requisitos expuestos en la Sección 4. 
+Finalmente, se interconectarán y configurarán amb as organizaciones para 
+redistribuir sus rutas de acuerdo con las indicaciones de la Sección 5. 
+Como resultado, se debe n obtener unas  redes completamente operativas 
+que cumplan los requisitos que se describen en el resto del documento . 
+Además, cada estudiante deberá responder de forma precisa y razonada a las 
+cuestiones que se plantean en las Secciones 2-5. 
+2. Introducción 
+ 
+Dos organizaciones han decidido colaborar para la gestión y configuración 
+de sus redes de forma conjunta. En cada una de ellas se cuenta con una red, 
+en la que deberemos interconectar los routers, asignar el direccionamiento, 
+configurar las interfaces de red, configurar los protoc olos de encaminamiento 
+y, finalmente, interconectar ambas organizaciones. 
+En las siguientes secciones se describen las características de cada una de 
+las redes. A lo largo de todo el enunciado, asumimos que las Redes de Área 
+Local (Local Area Networks, LAN) se implementan por medio de la tecnología 
+Ethernet. Por su parte, las co nexiones de Red de Área Extensa (Wide Area 
+Networks, WAN) se implementan por medio de enlaces serie punto a punto 
+(Point-to-Point, P2P) con líneas dedicadas serie.  
+Suponemos que:  
+- La organización A tiene asignado el rango: 172.YZ.(16*X).0/22. 
+- La organización B tiene asignado el rango: 17X.YZ.16.0/20. 
+Donde: 
+• X: representa el número del grupo de teoría al que pertenece el 
+equipo de estudiantes. Puede tomar los valores X = {1,2,3}. 
+• Y: representa la última  cifra del DNI del primer miembro del equipo 
+de prácticas. 
+• Z: representa la última cifra del DNI del segundo miembro del equipo. 
+Si el trabajo se realiza de modo individual, los valores de YZ corresponderán 
+a las dos últimas cifras de su DNI. 
+--- PAGE 3 ---
+ 
+ 
+Arquitectura de Redes Grado en Ingeniería Informática 
+Práctica Final 
+ 3 
+ 
+3. Direccionamiento 
+ 
+Diseñe el direccionamiento de todas las redes de área local (LAN) y punto 
+a punto (P2P) que se desglosan a continuación. Se supone que el conjunto de 
+las organizaciones tiene asignado el bloque de direcciones según se describe 
+en el apartado 2.  
+NOTA: En el direccionamiento se debe utilizar VLSM. En la organización A 
+se buscará mini mizar los hosts disponibles en la subred mientras que en la 
+organización B se buscará minimizar las tablas de encaminamiento mediante 
+la agregación de las rutas que se dirijan a cada área (es decir, se debe buscar 
+la agregación de redes por área). El número de hosts que aparece asociado a 
+cada LAN incluye las interfaces de los routers. Es decir, por ejemplo, en la LAN 
+A1 de la Organización A,  descrita a continuación, apare cen 100 hosts que 
+indican que hacen falta 100 direcciones IP diferentes: ese número incluye la 
+interfaz de R A1.  
+ 
+3.1 Organización A 
+ 
+La Figura 1 muestra la topología de red de la Organización A. En base a la 
+información de direccionamiento descrita en el punto 2,  se debe realizar el 
+direccionamiento completo de la organización . Nota: en la práctica se deben 
+utilizar, como aparece en la figura, con el modelo de router llamado Router PT 
+y con el modelo de switch que aparece como 2960-24TT (en Cisco Packet 
+Tracer es el que aparece como Cisco 2960). 
+ 
+ 
+Figura 1. Topología de red de la organización A  
+
+--- PAGE 4 ---
+ 
+ 
+Arquitectura de Redes Grado en Ingeniería Informática 
+Práctica Final 
+ 4 
+ 
+3.2 Organización B 
+ 
+La Figura 2 muestra la topología de red de la Organización B . Nota: en la 
+práctica se deben utilizar, como aparece en la figura,  con el modelo de router 
+llamado Router PT y con el modelo de switch que aparece como  2960-24TT 
+(en Cisco Packet Tracer es el que aparece como Cisco 2960). 
+ 
+ 
+ 
+Figura 2. Topología de red de la organización B 
+En base a la información de direccionamiento descrita en el punto 2 , se 
+pasará a realizar el direccionamiento de cada sistema autónomo teniendo en 
+cuenta las restricciones del número de hosts indicado en cada subred. 
+También se tiene por objetivo optimizar los rangos de direcciones asignados y 
+así minimizar el número de en tradas en la tabla de rutas mediante la 
+agregación de éstas. 
+Es requisito indispensable que la dirección asignada a cada subred permita 
+direccionar todos los hosts y routers conectados a la misma. Así mismo, no 
+debe haber rangos de direcciones solapados que permitan duplicidad de 
+direcciones IP. Una vez realizada esta tarea, configure en Cisco Packet Tracer 
+las interfaces de red de todos los hosts y routers con las direcciones IP que 
+correspondan de acuerdo con el diseño anterior. 
+  
+
+--- PAGE 5 ---
+ 
+ 
+Arquitectura de Redes Grado en Ingeniería Informática 
+Práctica Final 
+ 5 
+ 
+4. Encaminamiento intra-dominio IPv4 
+ 
+Configure los routers de la red anterior para que usen el protocolo de 
+enrutamiento RIP en la Organización A y OSPF en la Organización B. En cada 
+router se requiere que el tráfico del protocolo de enrutamiento no se envíe por 
+aquellas interfaces en las que no sea necesario  (concepto de interfaces 
+pasivas). Los hosts utilizan una ruta por defecto a través de su router de 
+acceso.  
+Tras la convergencia del protocolo de enrutamiento, todas las tablas de 
+rutas deben estar completas y bien configuradas, permitiendo conectividad 
+entre cualquier par de subredes del escenario.  Además, se deberán tener en 
+cuenta los siguientes aspectos específicos de la configuración de cada 
+organización. 
+ 
+4.1 Organización A 
+ 
+Se deben resolver las siguientes cuestiones: 
+1. Muestre las tablas de rutas de l Router A 4 (en la figura R  A4. Por 
+simplificar el enunciado, de aquí en adelante, usaremos “R”, en lugar de 
+“Router”) y comente los aspectos más relevantes. ¿Cuál es el camino 
+óptimo para alcanzar la interfaz de R  A2 que conecta con la 
+Organización B (P2P A-B)? ¿Por qué? ¿Cuántas alternativas hay para 
+alcanzarlo según la tabla de rutas? ¿Cuáles son y por qué? 
+2. Utilizando información de las tablas de rutas y capturas del tráfico RIP 
+en la red ( PDUs de Cisco Packet Tracer  y/o salida de debug de los 
+routers Cisco), explique el funcionamiento de split horizon sobre algún 
+enlace de la red. 
+3. Empleando el comando tracert, muestre la ruta que sigue el tráfico 
+desde el Host A5 (en la figura aparece como H A5, de aquí en adelante, 
+por simplificar, en lugar de “Host” utilizaremos “H”)  hasta la interfaz de 
+R A2 que conecta con la Organización B (P2P A-B). 
+4. Con la simulación en marcha, desactive en R A4 la interfaz de salida de 
+la ruta óptima hacia R A2. Utilizando información de las tablas de rutas 
+y capturas del tráfico RIP en la red ( PDUs de Cisco Packet Tracer y/o 
+salida de debug de los routers Cisco), explique en detalle cómo RIP 
+converge a una nueva solución para alcanzar R A2. Céntrese 
+únicamente en los routers R A4 y R A2. 
+5. Indique, en caso de que aplique, el funcionamiento sobre este escenario 
+y el uso de las técnicas triggered updates y poison reverse. 
+ 
+  
+--- PAGE 6 ---
+ 
+ 
+Arquitectura de Redes Grado en Ingeniería Informática 
+Práctica Final 
+ 6 
+ 
+4.2 Organización B 
+ 
+Las áreas a configurar se establecen de la siguiente forma: 
+• Área 0: R B1, R B2, R B3. 
+• Área 1: R B2. 
+• Área 2: R B3 y R B4. 
+• Área 3: R B3, R B5, y R B6. 
+ 
+Se deben resolver las siguientes cuestiones: 
+1. Realice un traceroute entre R  B4 y el H  B2. Justifica el camino que 
+siguen los paquetes. 
+2. Deshabilite ahora la interfaz del router R  B3 que conecta con el R  B2. 
+Espere a que la red converja de nuevo. A continuación, realiza el 
+traceroute de nuevo entre R B4 y H B2 y justifica el camino que ahora 
+siguen los paquetes. Cuando termine este ejercicio, vuelta a activar la 
+interfaz desactivada. 
+3. Realice la configuración necesaria para que R B4 y R B3 se conviertan 
+en Designated Router (DR) y Backup Designated Router (BDR), 
+respectivamente, de la LAN B3. Muestre que efectivamente se ha 
+realizado el cambio. 
+4. Muestre las tablas de rutas de R  B6 y comente los aspectos más 
+relevantes. 
+5. Realice la configuración necesaria para que el área 3 sea una stub area. 
+Analizando las tablas de rutas que considere relevantes, ¿qué 
+diferencias observa con respecto a la configuración anterior? ¿Por qué? 
+6. Muestre las tablas de rutas de R  B4 y comente los aspectos más 
+relevantes. ¿Cuál es el camino óptimo para alcanzar R B5? 
+7. Realice la configuración necesaria para que el área 2 sea una totally 
+stub area . Analizando las tablas de rutas que considere relevantes, 
+demuestre que se trata de una totally stub área. ¿Qué diferencias 
+observa con respecto a la configuración anterior? ¿Por qué? 
+8. Realice la configuración necesaria  (sin desactivar las interfaces)  para 
+que el camino óptimo bidireccional entre R B4 y H B5 pase a través de 
+R B6. Muestre que efectivamente se ha realizado el cambio. 
+9. Configura ahora los routers ABR de cada área para que realicen la 
+agregación de las subredes que se encuentran en su área. Comprueba 
+que se ha realizado esta agregación de redes mostrando la tabla de 
+rutas del R B2 antes y después de aplicar dicha agregación. 
+NOTA: Para cada cuestión es muy importante indicar la configuración que 
+sea necesaria aplicar en cada router  y explicar las opciones de configuración 
+utilizadas.  
+--- PAGE 7 ---
+ 
+ 
+Arquitectura de Redes Grado en Ingeniería Informática 
+Práctica Final 
+ 7 
+ 
+5. Interconexión y redistribución de rutas 
+ 
+ATENCIÓN: Antes de proceder a la interconexión, deben responderse las 
+preguntas anteriores, ya que afectará al estado de las tablas de rutas. 
+ 
+Conecte ambas organizaciones a través de un nuevo enlace entre R A2 y R 
+B1, tal y como se muestra en la Figura 3. 
+Figura 3. Topología final 
+ 
+Configure R B1 de la Organización B  para utilizar el protocolo de 
+enrutamiento RIP, de forma que actúe como router  de interconexión entre 
+organizaciones y puedan intercambiar información de enrutamiento con la 
+Organización A. 
+ 
+Se deben resolver las siguientes cuestiones: 
+1. Muestre las tablas de rutas de R A2 y R B1 y coméntelas en detalle. 
+2. Realice un traceroute del H A5 al H B6. Explica y justifica el camino que 
+se sigue. Indique cómo es posible que el R A3, que utiliza un protocolo 
+de enrutamiento intra -dominio, puede obtener información de otro SA 
+distinto que utiliza un protocolo de enrutamiento intra-dominio diferente. 
+3. Tras la redistribución consulte las tablas de rutas de los routers del Área 
+2 para demostrar que se trata de una totally stub área. ¿Qué sucede 
+con la tabla de rutas? ¿Por qué? 
+4. Consulte también las tablas de rutas de los routers del Área 3 y explique 
+por qué se trata de un área stub. ¿Qué ocurriría en el caso de que no 
+fuera stub? ¿Por qué? 
+5. Utilizando la herramienta Cisco Packet Tracer  capture tráfico OSPF 
+para mostrar al menos cuatro tipos de LSAs diferentes que se 
+intercambian los routers del escenario e indique su propósito. 
+  
+
+--- PAGE 8 ---
+ 
+ 
+Arquitectura de Redes Grado en Ingeniería Informática 
+Práctica Final 
+ 8 
+ 
+6. Entrega 
+ 
+El trabajo debe hacerse, como máximo, en equipos de dos personas. El 
+equipo, como resolución a esta práctica, deberá entregar el siguiente material: 
+ 
+1. Archivo comprimido que contenga  el escenario de simulación de 
+Cisco Packet Tracer (fichero de topología .pkt). El contenido de este 
+archivo se usará para realizar la entrevista de prácticas, en caso de que 
+ésta sea necesaria. 
+2. Documento PDF con la memoria de la práctica. Dicha memoria debe 
+detallar una justificación de aquellas decisiones de diseño que el equipo 
+ha tomado en base al direccionamiento  y cómo se han configurado los 
+protocolos de encaminamiento utilizados. Así mismo, todas las 
+cuestiones que se plantean en las secciones anteriores deben 
+contestarse razonadamente . Se deben mostrar todas las 
+configuraciones relevantes  y su correspondiente explicación . La 
+documentación deberá incluir una portada donde se indiquen los 
+siguientes datos: nombre y apellidos, DNI, dirección de correo 
+electrónico de cada persona del  equipo y grupo de prácticas  al que 
+pertenecen. En Aula Virtual (sección Contenidos AR) s e ha puesto a 
+disposición del alumnado una guía de estilo  que se debe seguir para 
+desarrollar la memoria. 
+ 
+Los ficheros anteriores deben ser incluidos en una tarea que los profesores 
+crearán a tal efecto en el Aula Virtual. Si el equipo consta de dos personas  
+(norma general), ambas deben adjuntar idénticas copias del material anterior 
+a la tarea del Aula Virtual.  La fecha límite de entrega es el domingo 6 de 
+diciembre de 2026 (improrrogable), aunque los equipos tienen libertad para 
+entregarla con anterioridad. 
+  
+--- PAGE 9 ---
+ 
+ 
+Arquitectura de Redes Grado en Ingeniería Informática 
+Práctica Final 
+ 9 
+ 
+7. Evaluación 
+ 
+Tal y como viene reflejado en la guía docente de la asignatura: 
+• La calificación de prácticas se basará en la entrega de una memoria 
+final, así como los ficheros de configuración desarrollados a lo largo 
+del curso, acerca de un trabajo planteado desde el inicio del curso. 
+• La tarea para la entrega se abrirá con suficiente antelación a través 
+de AV. 
+• A criterio del profesorado, cabe la opción de realizar una entrevista 
+de prácticas donde el profesor comprobará la correcta asimilación de 
+los conceptos trabajados durante las sesiones de prácticas del curso. 
+El profesor podrá decidir qué estudiantes deben realizar la entrevista 
+y cuáles no. Esta entrevista tendrá peso dentro de la calificación final 
+de la parte de prácticas. 
+• Para poder hacer media con la parte de teoría la calificación de la 
+parte de prácticas debe ser superior o igual a 5 sobre 10. 
+• Las calificaciones de prácticas no se guardan para cursos próximos. 
+ 
+Es importante aclarar que en caso de que se realice entrevista de prácticas, 
+cada persona del equipo defenderá, de forma individual, los conocimientos 
+adquiridos durante el desarrollo de ésta (aunque la entrevista se realice a  los 
+miembros del equipo de forma conjunta) . Por lo tanto, la nota final de cada 
+persona del equipo se establece de forma individual , puesto que 
+dependerá del resultado de dicha entrevista. 
+En la entrevista se preguntará por los distintos aspectos llevados a cabo con 
+la implementación realizada, y requerirá la realización de pruebas que permitan 
+demostrar el correcto funcionamiento de la práctica . La única ayuda que se 
+podrá consultar en la entrevista es la que ofrece la terminal de  comandos. 
+Además, se evaluará si cada estudiante ha comprendido correctamente el 
+diseño realizado. 
+El hecho de  que la práctica funcione no garantiza la superación de ésta. 
+Además de que la red sea operativa, ésta se debe ceñir a los requisitos 
+descritos en este enunciado  y el documento entregado debe responder 
+adecuadamente a las preguntas planteadas.  Por otro lado , una defensa 
+deficiente por parte de un a persona del equipo de prácticas  conllevará el 
+suspenso de la práctica para esa persona, aunque la implementación de ésta 
+sea correcta y adecuada. Así, podría darse el caso de que, en un mismo equipo 
+de prácticas, una persona apruebe y la otra no. 
+La entrega de esta práctica es obligatoria y, en c aso de ser superada, 
+supone el 40% de la nota final de la asignatura. 
+ 
