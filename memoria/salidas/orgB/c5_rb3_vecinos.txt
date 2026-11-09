@@ -1,0 +1,14 @@
+RB3#
+05:51:21: %OSPF-5-ADJCHG: Process 1, Nbr 173.81.16.202 on Serial7/0 from LOADING to FULL, Loading Done
+
+05:51:31: %OSPF-5-ADJCHG: Process 1, Nbr 173.81.16.201 on Serial6/0 from LOADING to FULL, Loading Done
+
+RB3#show ip ospf neighbor
+
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+173.81.17.5       0   FULL/  -        00:00:30    173.81.17.5     Serial2/0
+173.81.17.9       0   FULL/  -        00:00:38    173.81.17.9     Serial3/0
+173.81.16.97    100   FULL/DR         00:00:31    173.81.16.66    FastEthernet0/0
+173.81.16.202     0   FULL/  -        00:00:30    173.81.16.194   Serial7/0
+173.81.16.201     0   FULL/  -        00:00:38    173.81.16.198   Serial6/0

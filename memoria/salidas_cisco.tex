@@ -1,0 +1,55 @@
+% =====================================================================
+% Salidas de la consola de Cisco Packet Tracer, tal cual.
+%
+% Uso: en el preámbulo del documento principal
+%     \input{salidas_cisco}
+% y en el texto
+%     \salidacisco{salidas/orgB/c1_rb4_traceroute_hb2.txt}
+%                 {Traceroute de RB4 a HB2}{fig:c1-traceroute}
+%     ... como se ve en la Figura~\ref{fig:c1-traceroute} ...
+%
+% Cada salida está en su propio .txt, copiada literalmente de Packet Tracer:
+% LaTeX la lee del fichero, así que se conservan los espacios, la alineación de
+% columnas y las líneas en blanco. No hay que copiarla a mano en el .tex.
+%
+% Fuente: Courier (pcr), monoespaciada como la consola de Packet Tracer.
+% Las líneas muy largas (p.ej. los mensajes %OSPF-5-ADJCHG) se parten al
+% llegar al borde, igual que hace la consola, sin añadir símbolos.
+% =====================================================================
+\usepackage[T1]{fontenc}
+\usepackage{listings}
+\usepackage{xcolor}
+
+% La consola de Packet Tracer tiene 80 columnas. Con \footnotesize, en un
+% documento de 11pt con márgenes de 2,5 cm caben ~82 caracteres por línea, así que
+% las tablas (show ip ospf neighbor, show ip route) salen sin partirse.
+% Si la plantilla final tiene márgenes más grandes, usar [\scriptsize].
+\lstdefinestyle{cisco}{
+  basicstyle=\fontfamily{pcr}\selectfont\footnotesize,
+  columns=fixed,          % todas las letras igual de anchas -> columnas alineadas
+  keepspaces=true,        % respeta los espacios tal cual
+  showstringspaces=false,
+  breaklines=true,        % parte las líneas largas como la consola
+  breakatwhitespace=false,
+  breakindent=0pt,
+  prebreak={}, postbreak={},
+  tabsize=8,
+  upquote=true,           % comillas rectas, como en la consola
+  frame=single,
+  rulecolor=\color{black!35},
+  framesep=1.5mm,
+  xleftmargin=1.5mm, xrightmargin=1.5mm,
+  backgroundcolor=\color{white},
+  aboveskip=0pt, belowskip=0pt,
+}
+
+% \salidacisco[tamaño opcional]{fichero}{pie de figura}{etiqueta}
+% Tamaño por defecto \footnotesize (80 columnas caben enteras).
+\newcommand{\salidacisco}[4][\footnotesize]{%
+  \begin{figure}[htbp]
+    \centering
+    \lstinputlisting[style=cisco,basicstyle=\fontfamily{pcr}\selectfont#1]{#2}
+    \caption{#3}
+    \label{#4}
+  \end{figure}%
+}

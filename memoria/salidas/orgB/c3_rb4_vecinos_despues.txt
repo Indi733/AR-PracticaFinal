@@ -1,0 +1,8 @@
+RB4#
+07:13:17: %OSPF-5-ADJCHG: Process 1, Nbr 173.81.17.10 on FastEthernet0/0 from LOADING to FULL, Loading Done
+
+RB4#show ip ospf neighbor
+
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+173.81.17.10     50   FULL/BDR        00:00:31    173.81.16.65    FastEthernet0/0

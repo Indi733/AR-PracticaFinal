@@ -1,0 +1,20 @@
+RB6#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+RB6(config)#router ospf 1
+RB6(config-router)# area 3 stub
+RB6(config-router)#end
+07:28:32: %OSPF-5-ADJCHG: Process 1, Nbr 173.81.17.10 on Serial2/0 from FULL to DOWN, Neighbor Down: Adjacency forced to reset
+
+07:28:32: %OSPF-5-ADJCHG: Process 1, Nbr 173.81.17.10 on Serial2/0 from FULL to DOWN, Neighbor Down: Interface down or detached
+
+07:28:32: %OSPF-5-ADJCHG: Process 1, Nbr 173.81.16.202 on Serial3/0 from FULL to DOWN, Neighbor Down: Adjacency forced to reset
+
+07:28:32: %OSPF-5-ADJCHG: Process 1, Nbr 173.81.16.202 on Serial3/0 from FULL to DOWN, Neighbor Down: Interface down or detached
+
+RB6#
+%SYS-5-CONFIG_I: Configured from console by console
+
+RB6#
+07:28:41: %OSPF-5-ADJCHG: Process 1, Nbr 173.81.17.10 on Serial2/0 from LOADING to FULL, Loading Done
+
+07:28:41: %OSPF-5-ADJCHG: Process 1, Nbr 173.81.16.202 on Serial3/0 from LOADING to FULL, Loading Done

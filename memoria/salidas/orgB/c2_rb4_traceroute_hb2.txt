@@ -1,0 +1,8 @@
+RB4>traceroute 173.81.16.2
+Type escape sequence to abort.
+Tracing the route to 173.81.16.2
+
+  1   173.81.16.65    0 msec    0 msec    0 msec
+  2   173.81.17.5     12 msec   8 msec    1 msec
+  3   173.81.17.2     22 msec   19 msec   1 msec
+  4   173.81.16.2     0 msec    2 msec    12 msec

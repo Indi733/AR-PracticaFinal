@@ -1,0 +1,11 @@
+RB3#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+RB3(config)#router ospf 1
+RB3(config-router)# area 2 stub no-summary
+RB3(config-router)#end
+06:03:35: %OSPF-5-ADJCHG: Process 1, Nbr 173.81.16.97 on FastEthernet0/0 from FULL to DOWN, Neighbor Down: Adjacency forced to reset
+
+06:03:35: %OSPF-5-ADJCHG: Process 1, Nbr 173.81.16.97 on FastEthernet0/0 from FULL to DOWN, Neighbor Down: Interface down or detached
+
+RB3#
+%SYS-5-CONFIG_I: Configured from console by console

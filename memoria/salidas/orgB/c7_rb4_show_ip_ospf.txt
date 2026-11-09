@@ -1,0 +1,23 @@
+RB4#show ip ospf
+ Routing Process "ospf 1" with ID 173.81.16.97
+ Supports only single TOS(TOS0) routes
+ Supports opaque LSA
+ SPF schedule delay 5 secs, Hold time between two SPFs 10 secs
+ Minimum LSA interval 5 secs. Minimum LSA arrival 1 secs
+ Number of external LSA 0. Checksum Sum 0x000000
+ Number of opaque AS LSA 0. Checksum Sum 0x000000
+ Number of DCbitless external and opaque AS LSA 0
+ Number of DoNotAge external and opaque AS LSA 0
+ Number of areas in this router is 1. 0 normal 1 stub 0 nssa
+ External flood list length 0
+    Area 2
+        Number of interfaces in this area is 2
+        It is a stub area
+        Area has no authentication
+        SPF algorithm executed 15 times
+        Area ranges are
+        Number of LSA 4. Checksum Sum 0x02a498
+        Number of opaque link LSA 0. Checksum Sum 0x000000
+        Number of DCbitless LSA 0
+        Number of indication LSA 0
+        Number of DoNotAge LSA 0

@@ -1,0 +1,17 @@
+RB3#show ip ospf interface FastEthernet0/0
+
+FastEthernet0/0 is up, line protocol is up
+  Internet address is 173.81.16.65/27, Area 2
+  Process ID 1, Router ID 173.81.17.10, Network Type BROADCAST, Cost: 1
+  Transmit Delay is 1 sec, State BDR, Priority 50
+  Designated Router (ID) 173.81.16.97, Interface address 173.81.16.66
+  Backup Designated Router (ID) 173.81.17.10, Interface address 173.81.16.65
+  Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+    Hello due in 00:00:09
+  Index 3/3, flood queue length 0
+  Next 0x0(0)/0x0(0)
+  Last flood scan length is 1, maximum is 1
+  Last flood scan time is 0 msec, maximum is 0 msec
+  Neighbor Count is 1, Adjacent neighbor count is 1
+    Adjacent with neighbor 173.81.16.97  (Designated Router)
+  Suppress hello for 0 neighbor(s)

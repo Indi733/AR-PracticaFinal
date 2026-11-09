@@ -1,0 +1,8 @@
+RB3#show ip ospf neighbor
+
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+173.81.17.5       0   FULL/  -        00:00:38    173.81.17.5     Serial2/0
+173.81.16.97      1   FULL/BDR        00:00:38    173.81.16.66    FastEthernet0/0
+173.81.16.201     0   FULL/  -        00:00:36    173.81.16.198   Serial6/0
+173.81.16.202     0   FULL/  -        00:00:35    173.81.16.194   Serial7/0

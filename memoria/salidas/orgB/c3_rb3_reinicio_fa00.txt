@@ -1,0 +1,20 @@
+RB3#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+RB3(config)#interface FastEthernet0/0
+RB3(config-if)# shutdown
+
+RB3(config-if)# no shutdown
+
+RB3(config-if)#end
+%LINK-5-CHANGED: Interface FastEthernet0/0, changed state to administratively down
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to down
+
+05:35:40: %OSPF-5-ADJCHG: Process 1, Nbr 173.81.16.97 on FastEthernet0/0 from FULL to DOWN, Neighbor Down: Interface down or detached
+
+%LINK-5-CHANGED: Interface FastEthernet0/0, changed state to up
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
+
+RB3#
+%SYS-5-CONFIG_I: Configured from console by console

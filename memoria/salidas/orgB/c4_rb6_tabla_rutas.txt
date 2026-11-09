@@ -1,0 +1,24 @@
+RB6#show ip route
+Codes: C - connected, S - static, I - IGRP, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+       i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, ia - IS-IS inter area
+       * - candidate default, U - per-user static route, o - ODR
+       P - periodic downloaded static route
+
+Gateway of last resort is not set
+
+     173.81.0.0/16 is variably subnetted, 11 subnets, 3 masks
+O IA    173.81.16.0/26 [110/129] via 173.81.16.197, 00:08:35, Serial2/0
+O IA    173.81.16.64/27 [110/65] via 173.81.16.197, 00:15:03, Serial2/0
+O IA    173.81.16.96/27 [110/66] via 173.81.16.197, 00:03:08, Serial2/0
+O       173.81.16.128/27 [110/65] via 173.81.16.202, 00:15:03, Serial3/0
+C       173.81.16.160/27 is directly connected, FastEthernet0/0
+O       173.81.16.192/30 [110/128] via 173.81.16.197, 00:15:03, Serial2/0
+                         [110/128] via 173.81.16.202, 00:15:03, Serial3/0
+C       173.81.16.196/30 is directly connected, Serial2/0
+C       173.81.16.200/30 is directly connected, Serial3/0
+O IA    173.81.17.0/30 [110/192] via 173.81.16.197, 00:15:03, Serial2/0
+O IA    173.81.17.4/30 [110/128] via 173.81.16.197, 00:15:03, Serial2/0
+O IA    173.81.17.8/30 [110/128] via 173.81.16.197, 00:08:35, Serial2/0
