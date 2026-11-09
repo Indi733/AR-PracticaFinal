@@ -1,0 +1,394 @@
+<title>Organización B · OSPF</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+/* Layout: plano de red a todo ancho arriba (lo que se mira mientras se configura), debajo avisos, redes y fichas por router. */
+:root {
+  --bg: #f3f5f8;
+  --panel: #ffffff;
+  --ink: #17202c;
+  --muted: #5d6a7c;
+  --line: #d5dce6;
+  --grid: #e6ebf2;
+  --cable: #8a97a8;
+  --a0: #3554d1;  --a0-soft: rgba(53, 84, 209, .08);
+  --a1: #0b8a76;  --a1-soft: rgba(11, 138, 118, .08);
+  --a2: #b7740a;  --a2-soft: rgba(183, 116, 10, .09);
+  --a3: #b23a72;  --a3-soft: rgba(178, 58, 114, .08);
+  --ok: #1d8a4a; --warn: #c27a00; --bad: #c62f3b;
+  --ok-soft: #e3f4ea; --warn-soft: #fbf0d9; --bad-soft: #fbe4e6;
+  --code-bg: #f0f3f7;
+  --f-display: "Barlow Semi Condensed", "Arial Narrow", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --panel: #161d27; --ink: #e4e9f0; --muted: #93a0b2; --line: #2a3442; --grid: #1b2430; --cable: #6b788b;
+  --a0: #7d93ff; --a0-soft: rgba(125, 147, 255, .09);
+  --a1: #3fcdb3; --a1-soft: rgba(63, 205, 179, .08);
+  --a2: #f0b14a; --a2-soft: rgba(240, 177, 74, .08);
+  --a3: #ef7bb1; --a3-soft: rgba(239, 123, 177, .08);
+  --ok: #4cc47e; --warn: #f0b14a; --bad: #ff6b75;
+  --ok-soft: #14301f; --warn-soft: #33270f; --bad-soft: #3a1a1e; --code-bg: #0f151d;
+  color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --bg: #0f141b; --panel: #161d27; --ink: #e4e9f0; --muted: #93a0b2; --line: #2a3442; --grid: #1b2430; --cable: #6b788b;
+  --a0: #7d93ff; --a0-soft: rgba(125, 147, 255, .09);
+  --a1: #3fcdb3; --a1-soft: rgba(63, 205, 179, .08);
+  --a2: #f0b14a; --a2-soft: rgba(240, 177, 74, .08);
+  --a3: #ef7bb1; --a3-soft: rgba(239, 123, 177, .08);
+  --ok: #4cc47e; --warn: #f0b14a; --bad: #ff6b75;
+  --ok-soft: #14301f; --warn-soft: #33270f; --bad-soft: #3a1a1e; --code-bg: #0f151d;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 14px; line-height: 1.5; margin: 0; }
+.wrap { max-width: 1320px; margin: 0 auto; padding-block: 20px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 22px; }
+.mono { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+h1, h2 { font-family: var(--f-display); font-weight: 700; letter-spacing: .01em; margin: 0; text-wrap: balance; }
+h1 { font-size: 30px; line-height: 1.1; }
+h2 { font-size: 20px; }
+.eyebrow { font-family: var(--f-display); font-weight: 600; text-transform: uppercase; letter-spacing: .12em; font-size: 12px; color: var(--muted); }
+header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 12px; }
+header .meta { color: var(--muted); font-size: 13px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 12.5px; font-weight: 500; background: var(--panel); border: 1px solid var(--line); }
+.chip i { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+
+/* Plano */
+.board { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow-x: auto; }
+.board svg { display: block; width: 100%; min-width: 900px; height: auto; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; padding: 10px 14px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); min-width: 900px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.legend b { display: inline-block; width: 22px; height: 3px; border-radius: 2px; }
+svg text { font-family: var(--f-body); }
+.t-mono { font-family: var(--f-mono); }
+.area-shape { stroke-width: 1.4; stroke-dasharray: 5 5; }
+.area-label { font-family: var(--f-display); font-weight: 700; font-size: 15px; letter-spacing: .1em; }
+.link { stroke-width: 3; stroke-linecap: round; fill: none; }
+.link.cable { stroke: var(--cable); stroke-width: 1.6; }
+.link.p2p { stroke-dasharray: none; }
+.link.dim { opacity: .18; }
+.router circle { fill: var(--panel); stroke-width: 3; }
+.router text { font-family: var(--f-display); font-weight: 700; font-size: 17px; fill: var(--ink); }
+.router { cursor: pointer; }
+.router:hover circle, .router:focus circle { stroke-width: 5; }
+.router:focus { outline: none; }
+.sw rect { fill: var(--grid); stroke: var(--cable); stroke-width: 1.2; }
+.sw text { font-size: 11px; fill: var(--muted); font-weight: 600; }
+.host rect { fill: var(--panel); stroke: var(--line); stroke-width: 1.2; }
+.host .n { font-weight: 600; font-size: 12px; fill: var(--ink); }
+.host .ip { font-family: var(--f-mono); font-size: 11px; fill: var(--ink); }
+.host .gw { font-family: var(--f-mono); font-size: 10.5px; fill: var(--muted); }
+.host .gw.bad { fill: var(--bad); }
+.ifchip rect { fill: var(--panel); stroke-width: 1.3; }
+.ifchip text { font-family: var(--f-mono); font-size: 11.5px; fill: var(--ink); }
+.ifchip .ifn { font-weight: 700; }
+.netpill rect { fill: var(--panel); stroke-width: 1.3; }
+.netpill .nm { font-family: var(--f-display); font-weight: 600; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
+.netpill .nt { font-family: var(--f-mono); font-size: 12px; fill: var(--ink); font-weight: 500; }
+.badge circle { fill: var(--bad); }
+.badge text { fill: #fff; font-size: 11px; font-weight: 700; }
+
+/* Paneles */
+.grid2 { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 22px; align-items: start; }
+@media (max-width: 900px) { .grid2 { grid-template-columns: minmax(0, 1fr); } }
+section { display: grid; gap: 10px; min-width: 0; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; min-width: 0; }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th { text-align: left; font-family: var(--f-display); font-weight: 600; text-transform: uppercase; letter-spacing: .08em; font-size: 11.5px; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td { padding: 6px 10px; border-bottom: 1px solid var(--grid); vertical-align: top; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td.mono, .mono { font-size: 12.5px; }
+.atag { display: inline-block; min-width: 22px; text-align: center; padding: 0 6px; border-radius: 5px; font-weight: 700; font-family: var(--f-mono); font-size: 12px; color: var(--panel); }
+.st { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; }
+.st i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.issues { list-style: none; margin: 0; padding: 0; }
+.issues li { display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 10px; padding: 9px 12px; border-bottom: 1px solid var(--grid); align-items: start; }
+.issues li:last-child { border-bottom: 0; }
+.sev { font-family: var(--f-display); font-weight: 700; font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; padding: 1px 8px; border-radius: 5px; text-align: center; }
+.sev.error { background: var(--bad-soft); color: var(--bad); }
+.sev.warn { background: var(--warn-soft); color: var(--warn); }
+.sev.info { background: var(--code-bg); color: var(--muted); }
+.issues code { font-family: var(--f-mono); font-size: 12px; background: var(--code-bg); padding: 1px 5px; border-radius: 4px; white-space: pre-wrap; }
+.empty { padding: 14px; color: var(--ok); font-weight: 500; }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 400px), 1fr)); gap: 16px; }
+.card { scroll-margin-top: 16px; transition: box-shadow .3s; }
+.card.flash { box-shadow: 0 0 0 3px var(--a0); }
+.card-h { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+.card-h h3 { margin: 0; font-family: var(--f-display); font-size: 22px; font-weight: 700; }
+.card-h .role { color: var(--muted); font-size: 12.5px; }
+details { border-top: 1px solid var(--line); }
+summary { cursor: pointer; padding: 9px 14px; font-weight: 600; font-size: 13px; }
+summary:focus-visible, button:focus-visible { outline: 2px solid var(--a0); outline-offset: 2px; }
+pre { margin: 0 14px 12px; background: var(--code-bg); border-radius: 7px; padding: 10px 12px; font-family: var(--f-mono); font-size: 12.5px; line-height: 1.55; overflow-x: auto; position: relative; }
+.copy { float: right; font: 600 11.5px var(--f-body); background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 2px 8px; cursor: pointer; margin: 0 14px 6px 0; }
+.note { color: var(--muted); font-size: 12.5px; padding: 0 14px 10px; }
+@media (prefers-reduced-motion: reduce) { .card { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow">Práctica final · Arquitectura de Redes</div>
+      <h1>Organización B · OSPF</h1>
+    </div>
+    <div class="meta" id="meta"></div>
+  </header>
+
+  <div class="board">
+    <svg id="plano" viewBox="0 0 1180 860" role="img" aria-label="Topología de la organización B con interfaces, IPs y áreas OSPF"></svg>
+    <div class="legend">
+      <span><b style="background:var(--a0)"></b>Área 0</span>
+      <span><b style="background:var(--a1)"></b>Área 1</span>
+      <span><b style="background:var(--a2)"></b>Área 2</span>
+      <span><b style="background:var(--a3)"></b>Área 3</span>
+      <span><i style="background:var(--ok)"></i>En OSPF, área correcta</span>
+      <span><i style="background:var(--warn)"></i>Falta en OSPF</span>
+      <span><i style="background:var(--bad)"></i>Shutdown, sin IP o área equivocada</span>
+      <span>Pulsa un router para ir a su ficha</span>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <section>
+      <h2>Redes y áreas</h2>
+      <div class="panel tablewrap"><table id="t-redes"></table></div>
+      <h2>Agregación por área</h2>
+      <div class="panel tablewrap"><table id="t-resumen"></table></div>
+    </section>
+    <section>
+      <h2 id="h-issues">Pendiente en el .pkt</h2>
+      <div class="panel"><ul class="issues" id="issues"></ul></div>
+    </section>
+  </div>
+
+  <section>
+    <h2>Routers</h2>
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <section>
+    <h2>Hosts</h2>
+    <div class="panel tablewrap"><table id="t-hosts"></table></div>
+  </section>
+</div>
+
+<script type="application/json" id="data">/*__DATA__*/{}</script>
+<script>
+(function () {
+  const D = JSON.parse(document.getElementById('data').textContent);
+  const NS = 'http://www.w3.org/2000/svg';
+  const P = D.layout.pos;
+  const areaVar = a => (a === null || a === undefined) ? 'var(--cable)' : `var(--a${a})`;
+  const stVar = s => s === 'ok' ? 'var(--ok)' : s === 'sin-ospf' ? 'var(--warn)' : 'var(--bad)';
+  const stTxt = { 'ok': 'OK', 'sin-ospf': 'Falta en OSPF', 'shutdown': 'Shutdown', 'sin-ip': 'Sin IP', 'area-mal': 'Área equivocada' };
+  const segBy = Object.fromEntries(D.segments.map(s => [s.name, s]));
+  const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const lastOct = ip => ip ? '.' + ip.split('.')[3] : '—';
+
+  document.getElementById('meta').innerHTML =
+    `Leído de <span class="mono">${esc(D.pkt)}</span> · Packet Tracer ${esc(D.version)} · generado ${esc(D.generado)}<br>` +
+    `Rango asignado <span class="mono">173.81.16.0/20</span>`;
+
+  // ---------- SVG ----------
+  const svg = document.getElementById('plano');
+  function el(tag, attrs, parent, text) {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    if (text !== undefined) e.textContent = text;
+    (parent || svg).appendChild(e);
+    return e;
+  }
+  const gAreas = el('g', {}), gLinks = el('g', {}), gNodes = el('g', {}), gLabels = el('g', {});
+
+  function blob(pts) {
+    const n = pts.length; let d = `M${pts[0][0]},${pts[0][1]}`;
+    for (let i = 0; i < n; i++) {
+      const p0 = pts[(i - 1 + n) % n], p1 = pts[i], p2 = pts[(i + 1) % n], p3 = pts[(i + 2) % n];
+      const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6];
+      const c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6];
+      d += ` C${c1[0]},${c1[1]} ${c2[0]},${c2[1]} ${p2[0]},${p2[1]}`;
+    }
+    return d + 'Z';
+  }
+  for (const a of [3, 2, 1, 0]) {
+    const pts = D.layout.hull[a];
+    el('path', { d: blob(pts), class: 'area-shape', fill: `var(--a${a}-soft)`, stroke: `var(--a${a})` }, gAreas);
+    const [x, y, t] = D.layout.area_label[a];
+    el('text', { x, y, class: 'area-label', fill: `var(--a${a})`, 'text-anchor': 'middle' }, gAreas, t);
+  }
+
+  // Enlace hacia la Organización A (sección 5)
+  if (P.RB1) {
+    el('line', { x1: 0, y1: P.RB1[1], x2: P.RB1[0] - 30, y2: P.RB1[1], class: 'link cable', 'stroke-dasharray': '6 5' }, gLinks);
+    el('text', { x: 10, y: P.RB1[1] - 10, fill: 'var(--muted)', 'font-size': 11.5 }, gLinks, '→ RA2 (Org. A, sección 5)');
+  }
+
+  const routerR = 30;
+  const chipsPorRouter = {};
+  function chip(dev, other, itf) {
+    const [x1, y1] = P[dev], [x2, y2] = P[other];
+    const L = Math.hypot(x2 - x1, y2 - y1), ux = (x2 - x1) / L, uy = (y2 - y1) / L;
+    const txt1 = itf.short, txt2 = lastOct(itf.ip);
+    const w = (txt1.length + txt2.length + 1) * 7 + 18, h = 22;
+    const d = routerR + 8 + Math.abs(ux) * w / 2 + Math.abs(uy) * h / 2;
+    const cx = x1 + ux * d, cy = y1 + uy * d;
+    const g = el('g', { class: 'ifchip' }, gLabels);
+    const col = stVar(itf.estado);
+    el('rect', { x: cx - w / 2, y: cy - h / 2, width: w, height: h, rx: 5, stroke: col }, g);
+    el('circle', { cx: cx - w / 2 + 8, cy, r: 3.5, fill: col }, g);
+    const t = el('text', { x: cx - w / 2 + 15, y: cy + 4 }, g);
+    el('tspan', { class: 'ifn' }, t, txt1);
+    el('tspan', {}, t, ' ' + txt2);
+    el('title', {}, g, `${dev} ${itf.name}\n${itf.ip || 'sin IP'}${itf.prefix != null ? '/' + itf.prefix : ''}\n${stTxt[itf.estado]}${itf.area_cfg != null ? ' · área configurada ' + itf.area_cfg : ''}`);
+  }
+  function pill(x, y, seg, title) {
+    const t1 = title, t2 = seg.net ? `${seg.net}/${seg.prefix}` : 'sin red';
+    const w = Math.max(t1.length * 7.2, t2.length * 7.4) + 20, h = 36;
+    const g = el('g', { class: 'netpill' }, gLabels);
+    el('rect', { x: x - w / 2, y: y - h / 2, width: w, height: h, rx: 6, stroke: areaVar(seg.area) }, g);
+    el('text', { x, y: y - 3, 'text-anchor': 'middle', class: 'nm', fill: areaVar(seg.area) }, g, t1);
+    el('text', { x, y: y + 12, 'text-anchor': 'middle', class: 'nt' }, g, t2);
+    el('title', {}, g, `${seg.name}\nRed ${t2}  máscara ${seg.mask}  wildcard ${seg.wc}\nÁrea ${seg.area}`);
+  }
+
+  const linkEls = [];
+  for (const lk of D.links) {
+    const seg = segBy[lk.seg];
+    const rr = lk.a.startsWith('RB') && lk.b.startsWith('RB');
+    const host = lk.a.startsWith('HB') || lk.b.startsWith('HB');
+    const cls = rr ? 'link p2p' : host ? 'link cable' : 'link';
+    const line = el('line', { x1: P[lk.a][0], y1: P[lk.a][1], x2: P[lk.b][0], y2: P[lk.b][1], class: cls,
+      stroke: host ? 'var(--cable)' : areaVar(seg && seg.area) }, gLinks);
+    linkEls.push({ line, lk });
+    for (const [dev, ifn, other] of [[lk.a, lk.ai, lk.b], [lk.b, lk.bi, lk.a]]) {
+      if (!dev.startsWith('RB')) continue;
+      const itf = (D.routers[dev] || { ifs: [] }).ifs.find(i => i.name === ifn);
+      if (itf) chip(dev, other, itf);
+    }
+    if (rr && seg) {
+      const mx = (P[lk.a][0] + P[lk.b][0]) / 2, my = (P[lk.a][1] + P[lk.b][1]) / 2;
+      pill(mx, my, seg, seg.name);
+    }
+  }
+  for (const seg of D.segments) {
+    if (seg.kind !== 'lan' || !D.layout.lan_label[seg.name]) continue;
+    const [x, y] = D.layout.lan_label[seg.name];
+    pill(x, y, seg, `${seg.name}${seg.req ? ' · ' + seg.req + ' hosts' : ''}`);
+  }
+
+  // Nodos
+  const issuesBy = {};
+  for (const i of D.issues) if (i.sev !== 'info') issuesBy[i.dev] = (issuesBy[i.dev] || 0) + 1;
+  for (const [name, [x, y]] of Object.entries(P)) {
+    if (name.startsWith('RB') && D.routers[name]) {
+      const r = D.routers[name];
+      const g = el('g', { class: 'router', tabindex: 0, role: 'button', 'aria-label': `Ir a la ficha de ${name}` }, gNodes);
+      const col = r.areas.length > 1 ? 'var(--ink)' : areaVar(r.areas[0]);
+      el('circle', { cx: x, cy: y, r: routerR, stroke: col }, g);
+      el('text', { x, y: y + 6, 'text-anchor': 'middle' }, g, name);
+      if (r.rol === 'ABR') el('text', { x, y: y - routerR - 6, 'text-anchor': 'middle', 'font-size': 10.5, 'font-weight': 700, fill: 'var(--muted)', 'letter-spacing': '.1em' }, gLabels, 'ABR');
+      if (issuesBy[name]) {
+        const b = el('g', { class: 'badge' }, g);
+        el('circle', { cx: x + 22, cy: y - 22, r: 9 }, b);
+        el('text', { x: x + 22, y: y - 18, 'text-anchor': 'middle' }, b, issuesBy[name]);
+      }
+      const go = () => {
+        const c = document.getElementById('card-' + name);
+        c.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+        c.classList.add('flash'); setTimeout(() => c.classList.remove('flash'), 1400);
+      };
+      g.addEventListener('click', go);
+      g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+      g.addEventListener('mouseenter', () => linkEls.forEach(({ line, lk }) => line.classList.toggle('dim', lk.a !== name && lk.b !== name)));
+      g.addEventListener('mouseleave', () => linkEls.forEach(({ line }) => line.classList.remove('dim')));
+    } else if (name.startsWith('SB')) {
+      const g = el('g', { class: 'sw' }, gNodes);
+      el('rect', { x: x - 30, y: y - 12, width: 60, height: 24, rx: 4 }, g);
+      el('text', { x, y: y + 4, 'text-anchor': 'middle' }, g, name);
+    } else if (name.startsWith('HB') && D.hosts[name]) {
+      const h = D.hosts[name];
+      const g = el('g', { class: 'host' }, gNodes);
+      el('rect', { x: x - 78, y: y - 26, width: 156, height: 52, rx: 6 }, g);
+      el('text', { x: x - 68, y: y - 9, class: 'n' }, g, name);
+      el('text', { x: x - 68, y: y + 6, class: 'ip' }, g, h.ip ? `${h.ip}/${h.prefix}` : 'sin IP');
+      const okgw = h.gw && h.gw === h.gw_exp;
+      el('text', { x: x - 68, y: y + 20, class: 'gw' + (okgw ? '' : ' bad') }, g, `gw ${h.gw || '— (falta)'}`);
+    }
+  }
+
+  // ---------- Tablas ----------
+  const atag = a => (a === null || a === undefined) ? '<span class="muted">—</span>' : `<span class="atag" style="background:${areaVar(a)}">${a}</span>`;
+  const st = s => `<span class="st"><i style="background:${stVar(s)}"></i>${stTxt[s]}</span>`;
+
+  document.getElementById('t-redes').innerHTML =
+    '<tr><th>Red</th><th>Área</th><th>Dirección</th><th>Máscara</th><th>Wildcard</th><th>Hosts</th><th>Interfaces</th></tr>' +
+    D.segments.map(s => `<tr>
+      <td><b>${esc(s.name)}</b></td><td>${atag(s.area)}</td>
+      <td class="mono">${s.net ? esc(s.net) + '/' + s.prefix : '—'}</td>
+      <td class="mono">${esc(s.mask || '—')}</td><td class="mono">${esc(s.wc || '—')}</td>
+      <td class="mono">${s.req ? s.req + ' / ' + s.capacidad : (s.capacidad ?? '—')}</td>
+      <td class="mono">${s.ends.map(e => `${e.dev} ${e.short} ${lastOct(e.ip)}`).join(' · ')}${s.hosts.length ? ' · ' + s.hosts.map(h => `${h} ${lastOct(D.hosts[h] && D.hosts[h].ip)}`).join(' · ') : ''}</td>
+    </tr>`).join('');
+
+  document.getElementById('t-resumen').innerHTML =
+    '<tr><th>Área</th><th>Agregado</th><th>Máscara</th><th>En</th><th>Comando</th></tr>' +
+    D.resumen.map(r => `<tr><td>${atag(r.area)}</td><td class="mono">${r.net}/${r.prefix}</td><td class="mono">${r.mask}</td>
+      <td>${r.abr.length ? r.abr.join(', ') : (r.area === 0 ? 'backbone' : '—')}</td>
+      <td class="mono">${r.cmd ? esc(r.cmd) : '—'}</td></tr>`).join('');
+
+  const ul = document.getElementById('issues');
+  const nErr = D.issues.filter(i => i.sev !== 'info').length;
+  document.getElementById('h-issues').textContent = nErr ? `Pendiente en el .pkt (${nErr})` : 'Pendiente en el .pkt';
+  ul.innerHTML = D.issues.length ? D.issues.map(i => `<li><span class="sev ${i.sev}">${{ error: 'Error', warn: 'Aviso', info: 'Nota' }[i.sev]}</span>
+      <div>${esc(i.text)}${i.fix ? `<br><code>${esc(i.fix)}</code>` : ''}</div></li>`).join('')
+    : '<li class="empty">Nada pendiente: interfaces, áreas y puertas de enlace cuadran con el diseño.</li>';
+
+  const cards = document.getElementById('cards');
+  for (const [name, r] of Object.entries(D.routers)) {
+    const rol = r.rol === 'ABR' ? `ABR · áreas ${r.areas.join(', ')}` : r.rol === 'backbone' ? 'Backbone · área 0' : `Interno · área ${r.areas.join(', ')}`;
+    const div = document.createElement('div');
+    div.className = 'panel card'; div.id = 'card-' + name;
+    div.innerHTML = `
+      <div class="card-h"><div><h3>${name}</h3><div class="role">${rol}${r.hostname !== name ? ` · hostname actual «${esc(r.hostname)}»` : ''}</div></div>
+        <div class="chips">${r.areas.map(a => atag(a)).join(' ')}</div></div>
+      <div class="tablewrap"><table>
+        <tr><th>Interfaz</th><th>IP</th><th>Red</th><th>Área</th><th>Estado</th></tr>
+        ${r.ifs.map(i => `<tr><td class="mono"><b>${esc(i.name)}</b>${i.pasiva ? ' <span class="muted">(pasiva)</span>' : ''}</td>
+          <td class="mono">${i.ip ? esc(i.ip) + '/' + i.prefix : '—'}</td>
+          <td>${esc(i.seg || '—')}</td><td>${atag(i.area_exp)}</td><td>${st(i.estado)}</td></tr>`).join('')}
+      </table></div>
+      <details><summary>Comandos para dejarlo según el diseño</summary>
+        <button class="copy" type="button">Copiar</button>
+        <pre>${esc(r.sugerido)}</pre>
+        <div class="note">Generado a partir de las IPs y del reparto de áreas del enunciado. Revísalo antes de pegarlo.</div>
+      </details>
+      <details><summary>OSPF configurado ahora</summary>
+        <pre>${r.ospf ? esc(r.ospf.lines.join('\n')) : 'Sin «router ospf».'}</pre>
+      </details>`;
+    cards.appendChild(div);
+    const btn = div.querySelector('.copy');
+    btn.addEventListener('click', () => {
+      const txt = r.sugerido;
+      const done = () => { btn.textContent = 'Copiado'; setTimeout(() => btn.textContent = 'Copiar', 1500); };
+      const fallback = () => { const sel = getSelection(), rg = document.createRange(); rg.selectNodeContents(div.querySelector('pre')); sel.removeAllRanges(); sel.addRange(rg); btn.textContent = 'Ctrl+C'; };
+      try { navigator.clipboard.writeText(txt).then(done, fallback); } catch (e) { fallback(); }
+    });
+  }
+
+  document.getElementById('t-hosts').innerHTML =
+    '<tr><th>Host</th><th>Red</th><th>IP</th><th>Puerta de enlace</th><th>Debería ser</th></tr>' +
+    Object.entries(D.hosts).map(([n, h]) => `<tr><td><b>${n}</b></td><td>${esc(h.seg || '—')}</td>
+      <td class="mono">${h.ip ? esc(h.ip) + '/' + h.prefix : '—'}</td>
+      <td class="mono">${h.gw ? esc(h.gw) : '<span style="color:var(--bad)">falta</span>'}</td>
+      <td class="mono">${esc(h.gw_exp || '—')}</td></tr>`).join('');
+})();
+</script>
