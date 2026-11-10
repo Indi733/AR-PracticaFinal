@@ -1,0 +1,8 @@
+RB4#traceroute 173.81.16.130
+Type escape sequence to abort.
+Tracing the route to 173.81.16.130
+
+  1   173.81.16.65    0 msec    0 msec    0 msec
+  2   173.81.16.198   0 msec    5 msec    4 msec
+  3   173.81.16.202   12 msec   10 msec   9 msec
+  4   173.81.16.130   1 msec    1 msec    1 msec

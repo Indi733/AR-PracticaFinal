@@ -1,0 +1,7 @@
+RB5#show ip route 173.81.16.64
+Routing entry for 173.81.16.64/27
+Known via "ospf 1", distance 110, metric 65, type intra area
+  Last update from 173.81.16.193 on Serial2/0, 01:05:48 ago
+  Routing Descriptor Blocks:
+  * 173.81.16.193, from 173.81.17.10, 01:05:48 ago, via Serial2/0
+      Route metric is 65, traffic share count is 1

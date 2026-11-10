@@ -1,0 +1,9 @@
+RB3#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+RB3(config)#router ospf 1
+RB3(config-router)# area 2 range 173.81.16.64 255.255.255.192
+RB3(config-router)# area 3 range 173.81.16.128 255.255.255.192
+RB3(config-router)# area 3 range 173.81.16.192 255.255.255.248
+RB3(config-router)#end
+RB3#
+%SYS-5-CONFIG_I: Configured from console by console

@@ -1,0 +1,10 @@
+C:\>tracert 173.81.16.66
+
+Tracing route to 173.81.16.66 over a maximum of 30 hops:
+
+  1   0 ms      0 ms      0 ms      173.81.16.129
+  2   7 ms      5 ms      0 ms      173.81.16.201
+  3   16 ms     1 ms      2 ms      173.81.16.197
+  4   1 ms      0 ms      1 ms      173.81.16.66
+
+Trace complete.

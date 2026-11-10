@@ -1,0 +1,7 @@
+RB3#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+RB3(config)#interface Serial7/0
+RB3(config-if)# ip ospf cost 200
+RB3(config-if)#end
+RB3#
+%SYS-5-CONFIG_I: Configured from console by console
