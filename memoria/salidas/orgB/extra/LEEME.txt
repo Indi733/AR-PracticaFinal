@@ -1,0 +1,8 @@
+Salidas que se capturaron pero no van en la memoria (comandos demasiado concretos o
+detalles que el enunciado no pide). Se guardan por si sirven para preparar la entrevista.
+generar_prueba.py no las incluye.
+
+c2_rb3_no_shutdown_s30.txt: captura real original de la reactivacion. El show ip ospf neighbor
+se lanzo unos segundos antes de converger (salen 4 vecinos). En la memoria se usa
+c2_rb3_no_shutdown_s30_bis.txt (carpeta orgB): misma captura con el show al final y la
+linea de RB2 (173.81.17.9) completada a mano, con el visto bueno de la profesora.

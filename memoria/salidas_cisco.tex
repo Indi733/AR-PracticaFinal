@@ -20,12 +20,13 @@
 \usepackage{listings}
 \usepackage{xcolor}
 
-% La consola de Packet Tracer tiene 80 columnas. Con \footnotesize, en un
-% documento de 11pt con márgenes de 2,5 cm caben ~82 caracteres por línea, así que
-% las tablas (show ip ospf neighbor, show ip route) salen sin partirse.
-% Si la plantilla final tiene márgenes más grandes, usar [\scriptsize].
+% La consola de Packet Tracer tiene 80 columnas. Con letra de 8,5 pt fija (no depende
+% del tamaño del documento), con márgenes de 2,5 cm caben ~88 caracteres por línea,
+% así que las tablas (show ip ospf neighbor, show ip route) salen sin partirse.
+% Si la plantilla final tiene márgenes más grandes y alguna se parte, usar [\scriptsize].
+\newcommand{\ciscofont}{\fontsize{8.5pt}{10pt}\selectfont}
 \lstdefinestyle{cisco}{
-  basicstyle=\fontfamily{pcr}\selectfont\footnotesize,
+  basicstyle=\fontfamily{pcr}\selectfont\ciscofont,
   columns=fixed,          % todas las letras igual de anchas -> columnas alineadas
   keepspaces=true,        % respeta los espacios tal cual
   showstringspaces=false,
@@ -44,9 +45,12 @@
 }
 
 % \salidacisco[tamaño opcional]{fichero}{pie de figura}{etiqueta}
-% Tamaño por defecto \footnotesize (80 columnas caben enteras).
-\newcommand{\salidacisco}[4][\footnotesize]{%
-  \begin{figure}[htbp]
+% Tamaño por defecto 8,5 pt (80 columnas caben enteras).
+% Colocación de las figuras: por defecto la de LaTeX (htbp). Para fijarlas justo donde
+% se citan, definir antes del \input:  \newcommand{\ciscoplacement}{H}  (paquete float).
+\providecommand{\ciscoplacement}{htbp}
+\newcommand{\salidacisco}[4][\ciscofont]{%
+  \edef\ciscoabrir{\noexpand\begin{figure}[\ciscoplacement]}\ciscoabrir
     \centering
     \lstinputlisting[style=cisco,basicstyle=\fontfamily{pcr}\selectfont#1]{#2}
     \caption{#3}

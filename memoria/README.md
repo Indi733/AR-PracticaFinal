@@ -56,6 +56,13 @@ python memoria/generar_prueba.py --pdf
 ```
 Genera `memoria/prueba_salidas.pdf` con todas las salidas de las tres carpetas. Si una salida tiene líneas de más de 82 caracteres (sin contar los mensajes de log), el pie lo avisa.
 
+## Borrador de la organización B
+
+```bash
+python memoria/generar_borrador_orgB.py
+```
+Convierte `Preguntas_OrgB_OSPF.md` en `memoria/borrador_orgB.pdf`: las respuestas con sus figuras en su sitio, numeradas y con pie, en Times 12 y justificado. Sirve para leerlo como quedaría y pulir la redacción. Lo que se edita es el `.md`; el `.tex` del borrador se regenera entero cada vez. Los pies de las figuras están en el diccionario `PIES` del script.
+
 ## Cosas a tener en cuenta
 
 - **No edites los `.txt` a mano**, salvo para quitar algo que no quieras enseñar. Lo que interesa es que sean la salida real.
